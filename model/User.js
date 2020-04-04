@@ -19,8 +19,15 @@ userSchema.methods.comparePasswords = function comparePasswords(password){
 userSchema.methods.generateToken = function generateToken(){
     return sign({
         email: this.email
-    }, 'lovey')
+    }, 'lovely', {expiresIn: '10m'})
 }
+
+userSchema.methods.generateRefreshToken = function generateRefreshToken(){
+    return sign({
+        id: this._id
+    }, 'lovelylovely', {expiresIn: '7d'})
+}
+
 
 userSchema.methods.generateJsonResponse = function generateJsonResponse(){
     return {
@@ -29,7 +36,12 @@ userSchema.methods.generateJsonResponse = function generateJsonResponse(){
     }
 }
 
-
+userSchema.methods.sendRefreshToken = function sendRefreshToken(res, token){
+    return  res.cookie('refreshtoken', token, {
+        httpOnly: true,
+        path : '/refresh_token'
+    })
+}
 
 
 module.exports = mongoose.model('User', userSchema)

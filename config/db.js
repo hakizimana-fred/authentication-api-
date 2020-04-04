@@ -1,3 +1,3 @@
 module.exports = {
-    db:     process.env.MONGO_CONNECTION
+    db:     'mongodb+srv://hakifredinard:webcloud456@tests-w5fns.mongodb.net/test?retryWrites=true&w=majority'
 }

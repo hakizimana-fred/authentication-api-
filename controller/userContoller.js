@@ -1,9 +1,10 @@
 const User = require('../model/User')
-async function signup(req, res){
+
+const signup = async (req, res) => {
     const {email, password} = req.body
     
     try{
-        // Check user exists
+        
         const exists = await User.findOne({email})
         if(exists) return res.status(400).json({error: 'User already exists'})
 
@@ -18,8 +19,24 @@ async function signup(req, res){
     }
 }
 
-function signin(req, res){
-    console.log('login')
+ const  signin = async (req, res) => {
+    const {email, password} = req.body
+    const method = new User()
+
+    try{
+        const exists = await User.findOneAndUpdate({email}, {refreshToken: method.generateRefreshToken()}, {new: true})
+
+        if(exists && exists.comparePasswords(password)) {
+            method.sendRefreshToken(res, exists.refreshToken)
+            return res.status(200).json({user: exists.generateJsonResponse()})
+        }else{
+            
+            return res.status(400).json({errors: 'Invalid email or password'})
+        }
+        
+    }catch(err){
+        res.status(400).json({errors:  `${err.message}`})
+    }
 }
 
 module.exports = {
