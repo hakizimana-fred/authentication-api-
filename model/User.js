@@ -19,12 +19,14 @@ userSchema.methods.comparePasswords = function comparePasswords(password){
 userSchema.methods.generateToken = function generateToken(){
     return sign({
         email: this.email
-    }, 'lovely', {expiresIn: '10m'})
+    }, 'lovely', 
+    {expiresIn: '10m' }
+    )
 }
 
-userSchema.methods.generateRefreshToken = function generateRefreshToken(){
+userSchema.methods.generateRefreshToken = function generateRefreshToken(id){
     return sign({
-        id: this._id
+        id
     }, 'lovelylovely', {expiresIn: '7d'})
 }
 
